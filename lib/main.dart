@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getx/user_controller.dart';
 import 'package:getx/value_controller.dart';
 
 void main() {
@@ -21,45 +22,96 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  final textController = TextEditingController();
+  final nameController = TextEditingController();
+  final ageController = TextEditingController();
 
-  final valueController = ValueController();
+  TextStyle commonStyle() => const TextStyle(
+        fontSize: 17,
+        fontWeight: FontWeight.w500,
+      );
+
+  final userController = UserController();
 
   @override
   Widget build(BuildContext context) {
-    print('construiu');
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //Valor
-            Obx(() {
-              return Text('Valor definido: ${valueController.definedValue}');
-            }),
-
-            //Campo
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 32.0),
-              child: TextField(
-                controller: textController,
+            //Apresentação do nome
+            Obx(
+              () => Text(
+                'Nome: ${userController.user.value.name}',
+                style: commonStyle(),
+              ),
+            ),
+            //Apresentação da idade
+            Obx(
+              () => Text(
+                'Idade: ${userController.user.value.age}',
+                style: commonStyle(),
               ),
             ),
 
-            //Botão
-            Obx(() {
-              return valueController.isLoading.value
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                onPressed: () {
-                  String value = textController.text;
+            const Divider(
+              thickness: 1.5,
+              color: Colors.blue,
+              height: 20,
+            ),
 
-                  valueController.setValue(value);
-                },
-                child: const Text('Confirmar'),
-              );
-            }),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                //Campo de nome
+                Expanded(
+                  child: TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(),
+                  ),
+                ),
+                //Botão para salvar o nome
+                ElevatedButton(
+                  onPressed: () {
+                    userController.setUserName(nameController.text);
+                  },
+                  child: const Text('Salvar'),
+                ),
+              ],
+            ),
+
+            //Espaçamento
+            const SizedBox(
+              height: 10,
+            ),
+
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                //Campo de idade
+                Expanded(
+                  child: TextField(
+                    controller: ageController,
+                    decoration: const InputDecoration(),
+                  ),
+                ),
+                //Botão para salvar a idade
+                ElevatedButton(
+                  onPressed: () {
+                    userController.setUserAge(int.parse(
+                        ageController.text)); //converte o texto em inteiro
+                  },
+                  child: const Text('Salvar'),
+                ),
+              ],
+            ),
+
+            //Espaçamento
+            const SizedBox(
+              height: 10,
+            ),
           ],
         ),
       ),
