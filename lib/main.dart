@@ -35,12 +35,9 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //Valor
-            GetX<ValueController>(
-                init: valueController,
-                builder: (controller) {
-                  print('Construiu GetX');
-                  return Text('Valor definido: ${controller.definedValue}');
-                }),
+            Obx(() {
+              return Text('Valor definido: ${valueController.definedValue}');
+            }),
 
             //Campo
             Padding(
@@ -51,20 +48,18 @@ class HomePage extends StatelessWidget {
             ),
 
             //Botão
-            GetX<ValueController>(
-                init: valueController,
-                builder: (ctrl) {
-                  return ctrl.isLoading.value
-                      ? const CircularProgressIndicator()
-                      : ElevatedButton(
-                          onPressed: () {
-                            String value = textController.text;
+            Obx(() {
+              return valueController.isLoading.value
+                  ? const CircularProgressIndicator()
+                  : ElevatedButton(
+                onPressed: () {
+                  String value = textController.text;
 
-                            valueController.setValue(value);
-                          },
-                          child: const Text('Confirmar'),
-                        );
-                }),
+                  valueController.setValue(value);
+                },
+                child: const Text('Confirmar'),
+              );
+            }),
           ],
         ),
       ),
