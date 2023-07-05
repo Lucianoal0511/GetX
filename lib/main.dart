@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:getx/value_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,24 +11,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Get X',
       home: HomePage(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   final textController = TextEditingController();
 
-  String definedValue = '';
+  final valueController = ValueController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,12 @@ class _HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //Valor
-            Text('Valor definido: $definedValue'),
+            GetBuilder<ValueController>(
+                init: valueController,
+                builder: (controller) {
+                  print('Construiu GetX');
+                  return Text('Valor definido: ${controller.definedValue}');
+                }),
 
             //Campo
             TextField(
@@ -46,17 +48,20 @@ class _HomePageState extends State<HomePage> {
             ),
 
             //Botão
-            ElevatedButton(
-              onPressed: () {
-                String value = textController.text;
+            GetBuilder<ValueController>(
+                init: valueController,
+                builder: (ctrl) {
+                  return ctrl.isLoading
+                      ? const CircularProgressIndicator()
+                      : ElevatedButton(
+                          onPressed: () {
+                            String value = textController.text;
 
-                setState(() {
-                  //Problema do SetState é que carrega toda a página quando acionado e isso faz com que se perca performance
-                  definedValue = value;
-                });
-              },
-              child: const Text('Confirmar'),
-            ),
+                            valueController.setValue(value);
+                          },
+                          child: const Text('Confirmar'),
+                        );
+                }),
           ],
         ),
       ),
