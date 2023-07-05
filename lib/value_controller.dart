@@ -1,20 +1,18 @@
 import 'package:get/get.dart';
 
 class ValueController extends GetxController {
-  String definedValue = '';
+  RxString definedValue = ''.obs;//variável observável.
 
-  bool isLoading = false;
+  RxBool isLoading = false.obs;
 
   //criar uma função para apenas chamar o widget que precisamos
-  Future<void> setValue(String value) async {
-    isLoading = true;
-    update();
+  Future<void> setValue(String newValue) async {
+    isLoading.value = true;
 
     await Future.delayed(const Duration(seconds: 2));//Foi criado um delay para acompanhar o andamento da construção
 
-    definedValue = value;
+    definedValue.value = newValue;
 
-    isLoading = false;
-    update();//Aqui que atualiza.
+    isLoading.value = false;
   }
 }

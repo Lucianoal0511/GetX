@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             //Valor
-            GetBuilder<ValueController>(
+            GetX<ValueController>(
                 init: valueController,
                 builder: (controller) {
                   print('Construiu GetX');
@@ -43,15 +43,18 @@ class HomePage extends StatelessWidget {
                 }),
 
             //Campo
-            TextField(
-              controller: textController,
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32.0),
+              child: TextField(
+                controller: textController,
+              ),
             ),
 
             //Botão
-            GetBuilder<ValueController>(
+            GetX<ValueController>(
                 init: valueController,
                 builder: (ctrl) {
-                  return ctrl.isLoading
+                  return ctrl.isLoading.value
                       ? const CircularProgressIndicator()
                       : ElevatedButton(
                           onPressed: () {
