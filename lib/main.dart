@@ -4,6 +4,11 @@ import 'package:getx/user_controller.dart';
 import 'package:getx/value_controller.dart';
 
 void main() {
+  // Get.put<UserController>(UserController());//Injeção de dependência diretamente na memória
+
+  //Essa injeção de dependência só acontece quando requisitada
+  Get.lazyPut<UserController>(() => UserController());
+
   runApp(const MyApp());
 }
 
@@ -30,7 +35,9 @@ class HomePage extends StatelessWidget {
         fontWeight: FontWeight.w500,
       );
 
-  final userController = UserController();
+  final userController = Get.find<UserController>();//instanciou o objeto
+  //outra forma de instanciar
+  // final UserController userController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -41,27 +48,6 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            //Apresentação do nome
-            Obx(
-              () => Text(
-                'Nome: ${userController.user.value.name}',
-                style: commonStyle(),
-              ),
-            ),
-            //Apresentação da idade
-            Obx(
-              () => Text(
-                'Idade: ${userController.user.value.age}',
-                style: commonStyle(),
-              ),
-            ),
-
-            const Divider(
-              thickness: 1.5,
-              color: Colors.blue,
-              height: 20,
-            ),
-
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -69,7 +55,9 @@ class HomePage extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: nameController,
-                    decoration: const InputDecoration(),
+                    decoration: const InputDecoration(
+                      labelText: 'Nome',
+                    ),
                   ),
                 ),
                 //Botão para salvar o nome
@@ -94,7 +82,9 @@ class HomePage extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: ageController,
-                    decoration: const InputDecoration(),
+                    decoration: const InputDecoration(
+                      labelText: 'Idade',
+                    ),
                   ),
                 ),
                 //Botão para salvar a idade
@@ -111,6 +101,60 @@ class HomePage extends StatelessWidget {
             //Espaçamento
             const SizedBox(
               height: 10,
+            ),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) {
+                    return DataScreen(
+                      // controller: userController,
+                    );
+                  },
+                ));
+              },
+              child: const Text('Tela de dados'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DataScreen extends StatelessWidget {
+  DataScreen({
+    super.key,
+  });
+
+  final UserController controller = Get.find();
+
+  TextStyle commonStyle() => const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Dados'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Obx(
+              () => Text(
+                'Nome: ${controller.user.value.name}',
+                style: commonStyle(),
+              ),
+            ),
+            Obx(
+              () => Text(
+                'Idade: ${controller.user.value.age}',
+                style: commonStyle(),
+              ),
             ),
           ],
         ),
