@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
         fontWeight: FontWeight.w500,
       );
 
-  final userController = Get.find<UserController>();//instanciou o objeto
+  final userController = Get.find<UserController>(); //instanciou o objeto
   //outra forma de instanciar
   // final UserController userController = Get.find();
 
@@ -108,8 +108,8 @@ class HomePage extends StatelessWidget {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) {
                     return DataScreen(
-                      // controller: userController,
-                    );
+                        // controller: userController,
+                        );
                   },
                 ));
               },
@@ -122,7 +122,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class DataScreen extends StatelessWidget {
+class DataScreen extends GetView<UserController> {
   DataScreen({
     super.key,
   });
@@ -144,22 +144,14 @@ class DataScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            GetX<UserController>(
-              builder: (controller) {
-                return Text(
+            Obx(() => Text(
                   'Nome: ${controller.user.value.name}',
                   style: commonStyle(),
-                );
-              }
-            ),
-            GetX<UserController>(
-              builder: (controller) {
-                return Text(
+                )),
+            Obx(() => Text(
                   'Idade: ${controller.user.value.age}',
                   style: commonStyle(),
-                );
-              }
-            ),
+                )),
           ],
         ),
       ),
