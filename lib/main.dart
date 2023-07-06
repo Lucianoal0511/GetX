@@ -127,7 +127,7 @@ class DataScreen extends StatelessWidget {
     super.key,
   });
 
-  final UserController controller = Get.find();
+  // final UserController controller = Get.find();
 
   TextStyle commonStyle() => const TextStyle(
         fontSize: 20,
@@ -144,17 +144,21 @@ class DataScreen extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Obx(
-              () => Text(
-                'Nome: ${controller.user.value.name}',
-                style: commonStyle(),
-              ),
+            GetX<UserController>(
+              builder: (controller) {
+                return Text(
+                  'Nome: ${controller.user.value.name}',
+                  style: commonStyle(),
+                );
+              }
             ),
-            Obx(
-              () => Text(
-                'Idade: ${controller.user.value.age}',
-                style: commonStyle(),
-              ),
+            GetX<UserController>(
+              builder: (controller) {
+                return Text(
+                  'Idade: ${controller.user.value.age}',
+                  style: commonStyle(),
+                );
+              }
             ),
           ],
         ),
